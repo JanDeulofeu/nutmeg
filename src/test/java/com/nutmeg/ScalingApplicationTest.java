@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ScalingApplicationTest {
 
+    private static final DateTimeFormatter YYYY_M_MDD = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     @Test
     public void validateTransactionsCalculationGivenDateBefore20170201() throws URISyntaxException, ExecutionException, InterruptedException {
@@ -33,8 +34,8 @@ public class ScalingApplicationTest {
         final File transactionsSplittedB = new File(new URI(getClass().getClassLoader().getResource("Transactions_B.csv").toString()));
 
 
-        final Map<String, List<Holding>> resultA = executor.submit(() -> new HoldingCalculatorImpl().calculateHoldings(transactionsSplittedA, LocalDate.parse("20170201", DateTimeFormatter.ofPattern("yyyyMMdd")))).get();
-        final Map<String, List<Holding>> resultB = executor.submit(() -> new HoldingCalculatorImpl().calculateHoldings(transactionsSplittedB, LocalDate.parse("20170201", DateTimeFormatter.ofPattern("yyyyMMdd")))).get();
+        final Map<String, List<Holding>> resultA = executor.submit(() -> new HoldingCalculatorImpl().calculateHoldings(transactionsSplittedA, LocalDate.parse("20170201", YYYY_M_MDD))).get();
+        final Map<String, List<Holding>> resultB = executor.submit(() -> new HoldingCalculatorImpl().calculateHoldings(transactionsSplittedB, LocalDate.parse("20170201", YYYY_M_MDD))).get();
 
         assertThat(resultA).isEqualToComparingFieldByField(resultB);
 

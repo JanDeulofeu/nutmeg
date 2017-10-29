@@ -2,6 +2,7 @@ package com.nutmeg.calculator;
 
 
 import com.nutmeg.calculator.impl.HoldingCalculatorImpl;
+import com.nutmeg.exceptions.TransactionFileProcessException;
 import com.nutmeg.model.Holding;
 import com.nutmeg.repository.HoldingRepository;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,34 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class HoldingCalculatorTest {
 
     private final HoldingCalculator holdingCalculator = new HoldingCalculatorImpl();
 
+
+    @Test
+    public void validateThrowsExceptionWhenFileNotFound() throws URISyntaxException {
+
+        assertThatThrownBy(() -> holdingCalculator.calculateHoldings(new File("file.txt"), LocalDate.now()))
+                .isInstanceOf(TransactionFileProcessException.class)
+                .hasMessage("Error Processing File [file.txt]");
+    }
+
+
+    @Test
+    public void validateThrowsExceptionWhenDateIsNull() throws URISyntaxException {
+
+        final URI uri = new URI(getClass().getClassLoader().getResource("Transactions.csv").toString());
+
+        final File file = new File(uri);
+
+        assertThatThrownBy(() -> holdingCalculator.calculateHoldings(file, null))
+                .isInstanceOf(TransactionFileProcessException.class)
+                .hasMessage("Error Processing File [Transactions.csv]");
+    }
+    
 
     @Test
     public void validateTransactionsCalculationGivenDateBefore20170201() throws URISyntaxException {

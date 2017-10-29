@@ -18,9 +18,6 @@ public class StockConverterTest {
     }
 
 
-    private final StockConverter stockConverter = new StockConverter();
-
-
     @ParameterizedTest
     @CsvSource({
             "'NEAA0000,20170101,DEP,0,1,CASH', 0 , 0",
@@ -35,7 +32,7 @@ public class StockConverterTest {
 
         final Stock stock = StockBuilder.buildStock(stockString);
 
-        stockConverter.convert(Arrays.asList(stock));
+        new StockConverter().convert(Arrays.asList(stock));
 
 
         final Holding actual = HoldingRepository.read(stock.getAccount(), stock.getAsset());

@@ -2,6 +2,7 @@ package com.nutmeg.calculator.impl;
 
 import com.nutmeg.annotations.ThreadSafe;
 import com.nutmeg.calculator.HoldingCalculator;
+import com.nutmeg.exceptions.TransactionFileProcessException;
 import com.nutmeg.model.Holding;
 import com.nutmeg.model.Stock;
 import com.nutmeg.repository.HoldingRepository;
@@ -36,8 +37,8 @@ public class HoldingCalculatorImpl implements HoldingCalculator {
             stockConverter.convert(transactions);
 
 
-        } catch (final IOException e) {
-            e.printStackTrace();
+        } catch (final IOException | NullPointerException e) {
+            throw new TransactionFileProcessException(String.format("Error Processing File [%s]", transactionFile.getName()), e);
         }
 
         return HoldingRepository.readAll();
