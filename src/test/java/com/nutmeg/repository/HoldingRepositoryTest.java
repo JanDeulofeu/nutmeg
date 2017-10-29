@@ -35,6 +35,4 @@ class HoldingRepositoryTest {
         assertThat(actual.getHolding()).isEqualTo(Double.valueOf(value));
         assertThat(actual.getAsset()).isEqualTo(stock.getAsset());
     }
-
-
 }

@@ -26,8 +26,6 @@ public class HoldingCalculatorImpl implements HoldingCalculator {
     @Override
     public Map<String, List<Holding>> calculateHoldings(final File transactionFile, final LocalDate date) {
 
-
-        System.out.println(Thread.currentThread().getId());
         try (final Stream<String> lines = Files.lines(transactionFile.toPath())) {
 
             final List<Stock> transactions = lines.map(line -> line.split(StockBuilder.SEPARATOR))

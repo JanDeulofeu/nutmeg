@@ -10,10 +10,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,76 +29,65 @@ public class ScalingApplicationTest {
 
         final ExecutorService executor = Executors.newFixedThreadPool(2);
 
-        final List<Future<Map<String, List<Holding>>>> futures = executor.invokeAll(Arrays.asList(new Worker(), new Worker()));
+        final File transactionsSplittedA = new File(new URI(getClass().getClassLoader().getResource("Transactions_A.csv").toString()));
+        final File transactionsSplittedB = new File(new URI(getClass().getClassLoader().getResource("Transactions_B.csv").toString()));
 
-        final Map<String, List<Holding>> resultA = futures.get(0).get();
-        final Map<String, List<Holding>> resultB = futures.get(1).get();
+
+        final Map<String, List<Holding>> resultA = executor.submit(() -> new HoldingCalculatorImpl().calculateHoldings(transactionsSplittedA, LocalDate.parse("20170201", DateTimeFormatter.ofPattern("yyyyMMdd")))).get();
+        final Map<String, List<Holding>> resultB = executor.submit(() -> new HoldingCalculatorImpl().calculateHoldings(transactionsSplittedB, LocalDate.parse("20170201", DateTimeFormatter.ofPattern("yyyyMMdd")))).get();
 
         assertThat(resultA).isEqualToComparingFieldByField(resultB);
 
 
-//        final Holding accountA_VUSA = result.entrySet().stream()
-//                .filter(k -> k.getKey().equals("NEAA0000"))
-//                .flatMap(k -> k.getValue().stream())
-//                .filter(s -> s.getAsset().equals("VUSA"))
-//                .findFirst().get();
-//
-//        final Holding accountA_VUKE = result.entrySet().stream()
-//                .filter(k -> k.getKey().equals("NEAA0000"))
-//                .flatMap(k -> k.getValue().stream())
-//                .filter(s -> s.getAsset().equals("VUKE"))
-//                .findFirst().get();
-//
-//        final Holding accountA_GILS = result.entrySet().stream()
-//                .filter(k -> k.getKey().equals("NEAA0000"))
-//                .flatMap(k -> k.getValue().stream())
-//                .filter(s -> s.getAsset().equals("GILS"))
-//                .findFirst().get();
-//
-//        final Holding accountA_CASH = result.entrySet().stream()
-//                .filter(k -> k.getKey().equals("NEAA0000"))
-//                .flatMap(k -> k.getValue().stream())
-//                .filter(s -> s.getAsset().equals("CASH"))
-//                .findFirst().get();
-//
-//        final Holding accountB_CASH = result.entrySet().stream()
-//                .filter(k -> k.getKey().equals("NEAB0001"))
-//                .flatMap(k -> k.getValue().stream())
-//                .filter(s -> s.getAsset().equals("CASH"))
-//                .findFirst().get();
-//
-//        assertThat(new Holding("VUSA", 10)).
-//
-//                isEqualTo(accountA_VUSA);
-//
-//        assertThat(new Holding("VUKE", 20)).
-//
-//                isEqualTo(accountA_VUKE);
-//
-//        assertThat(new Holding("GILS", 10.5120)).
-//
-//                isEqualTo(accountA_GILS);
-//
-//        assertThat(new Holding("CASH", 17.6849)).
-//
-//                isEqualTo(accountA_CASH);
-//
-//        assertThat(new Holding("CASH", 10000)).
-//
-//                isEqualTo(accountB_CASH);
+        final Holding accountA_VUSA = resultA.entrySet().stream()
+                .filter(k -> k.getKey().equals("NEAA0000"))
+                .flatMap(k -> k.getValue().stream())
+                .filter(s -> s.getAsset().equals("VUSA"))
+                .findFirst().get();
 
-    }
+        final Holding accountA_VUKE = resultA.entrySet().stream()
+                .filter(k -> k.getKey().equals("NEAA0000"))
+                .flatMap(k -> k.getValue().stream())
+                .filter(s -> s.getAsset().equals("VUKE"))
+                .findFirst().get();
 
-    private class Worker implements Callable<Map<String, List<Holding>>> {
+        final Holding accountA_GILS = resultA.entrySet().stream()
+                .filter(k -> k.getKey().equals("NEAA0000"))
+                .flatMap(k -> k.getValue().stream())
+                .filter(s -> s.getAsset().equals("GILS"))
+                .findFirst().get();
 
-        @Override
-        public Map<String, List<Holding>> call() throws Exception {
+        final Holding accountA_CASH = resultA.entrySet().stream()
+                .filter(k -> k.getKey().equals("NEAA0000"))
+                .flatMap(k -> k.getValue().stream())
+                .filter(s -> s.getAsset().equals("CASH"))
+                .findFirst().get();
 
-            final URI uri = new URI(getClass().getClassLoader().getResource("Transactions.csv").toString());
+        final Holding accountB_CASH = resultA.entrySet().stream()
+                .filter(k -> k.getKey().equals("NEAB0001"))
+                .flatMap(k -> k.getValue().stream())
+                .filter(s -> s.getAsset().equals("CASH"))
+                .findFirst().get();
 
-            final File file = new File(uri);
+        assertThat(new Holding("VUSA", 10)).
 
-            return new HoldingCalculatorImpl().calculateHoldings(file, LocalDate.parse("20170201", DateTimeFormatter.ofPattern("yyyyMMdd")));
-        }
+                isEqualTo(accountA_VUSA);
+
+        assertThat(new Holding("VUKE", 20)).
+
+                isEqualTo(accountA_VUKE);
+
+        assertThat(new Holding("GILS", 10.5120)).
+
+                isEqualTo(accountA_GILS);
+
+        assertThat(new Holding("CASH", 17.6849)).
+
+                isEqualTo(accountA_CASH);
+
+        assertThat(new Holding("CASH", 10000)).
+
+                isEqualTo(accountB_CASH);
+
     }
 }
