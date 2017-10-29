@@ -121,6 +121,4 @@ public class HoldingCalculatorTest {
         assertThat(new Holding("CASH", 5000)).isEqualTo(accountB_CASH);
 
     }
-
-
 }
