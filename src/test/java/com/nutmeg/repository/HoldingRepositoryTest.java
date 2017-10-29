@@ -16,6 +16,7 @@ class HoldingRepositoryTest {
 
     @ParameterizedTest
     @CsvSource({
+            "'NEAA0000,20170101,DEP,0,0,CASH', 0",
             "'NEAA0000,20170101,DEP,100,1,CASH', 100",
             "'NEAA0000,20170101,DEP,20,1,CASH', 20",
             "'NEAA0000,20170101,DEP,150,1,CASH', 150",

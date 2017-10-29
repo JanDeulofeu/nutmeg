@@ -69,25 +69,14 @@ public class ScalingApplicationTest {
                 .filter(s -> s.getAsset().equals("CASH"))
                 .findFirst().get();
 
-        assertThat(new Holding("VUSA", 10)).
+        assertThat(new Holding("VUSA", 10)).isEqualTo(accountA_VUSA);
 
-                isEqualTo(accountA_VUSA);
+        assertThat(new Holding("VUKE", 20)).isEqualTo(accountA_VUKE);
 
-        assertThat(new Holding("VUKE", 20)).
+        assertThat(new Holding("GILS", 10.5120)).isEqualTo(accountA_GILS);
 
-                isEqualTo(accountA_VUKE);
+        assertThat(new Holding("CASH", 17.6849)).isEqualTo(accountA_CASH);
 
-        assertThat(new Holding("GILS", 10.5120)).
-
-                isEqualTo(accountA_GILS);
-
-        assertThat(new Holding("CASH", 17.6849)).
-
-                isEqualTo(accountA_CASH);
-
-        assertThat(new Holding("CASH", 10000)).
-
-                isEqualTo(accountB_CASH);
-
+        assertThat(new Holding("CASH", 10000)).isEqualTo(accountB_CASH);
     }
 }

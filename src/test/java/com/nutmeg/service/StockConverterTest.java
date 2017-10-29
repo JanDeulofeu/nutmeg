@@ -23,6 +23,7 @@ public class StockConverterTest {
 
     @ParameterizedTest
     @CsvSource({
+            "'NEAA0000,20170101,DEP,0,1,CASH', 0 , 0",
             "'NEAA0000,20170101,DEP,100,1,CASH', 100 , 100",
             "'NEAA0000,20170102,BOT,20,2.123,VUKE', 57.54, 20",
             "'NEAA0000,20170102,BOT,30,1.500,VUSA', 12.54 , 30",
@@ -44,7 +45,5 @@ public class StockConverterTest {
         assertThat(stock.getAsset()).isEqualTo(actual.getAsset());
 
         assertThat(Double.valueOf(cash)).isEqualTo(holdingCash.getHolding());
-
     }
-
 }

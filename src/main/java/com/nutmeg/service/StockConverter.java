@@ -76,5 +76,4 @@ public final class StockConverter {
     private double formatDigits(final Double value) {
         return new BigDecimal(Double.toString(value)).setScale(NUMBER_DECIMALS, RoundingMode.HALF_UP).doubleValue();
     }
-
 }
