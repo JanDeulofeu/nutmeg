@@ -17,6 +17,7 @@
         <junit.version>5.0.1</junit.version>
         <assert.version>3.8.0</assert.version>
         <mockito.version>1.10.19</mockito.version>
+        <google-collections.version>1.0</google-collections.version>
     </properties>
 
 
@@ -54,6 +55,13 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+            <version>${google-collections.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -8,6 +8,14 @@ public class Holding implements Serializable {
     private String asset;
     private double holding;
 
+    public Holding() {
+    }
+
+    public Holding(final String asset, final double holding) {
+        this.asset = asset;
+        this.holding = holding;
+    }
+
     public String getAsset() {
         return asset;
     }
