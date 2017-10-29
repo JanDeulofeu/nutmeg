@@ -10,7 +10,12 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 public class StockConverterTest {
+
+    static {
+        HoldingRepository.reset();
+    }
 
 
     private final StockConverter stockConverter = new StockConverter();
@@ -32,13 +37,13 @@ public class StockConverterTest {
         stockConverter.convert(Arrays.asList(stock));
 
 
-        final Holding actual = HoldingRepository.read(stock);
+        final Holding actual = HoldingRepository.read(stock.getAccount(), stock.getAsset());
+        final Holding holdingCash = HoldingRepository.read(stock.getAccount(), HoldingRepository.CASH);
 
         assertThat(Double.valueOf(holdings)).isEqualTo(actual.getHolding());
         assertThat(stock.getAsset()).isEqualTo(actual.getAsset());
 
-        final Holding holding = HoldingRepository.readCash(stock.getAccount());
-        assertThat(Double.valueOf(cash)).isEqualTo(holding.getHolding());
+        assertThat(Double.valueOf(cash)).isEqualTo(holdingCash.getHolding());
 
     }
 

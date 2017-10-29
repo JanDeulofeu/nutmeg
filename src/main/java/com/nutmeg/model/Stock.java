@@ -1,10 +1,13 @@
 package com.nutmeg.model;
 
+import com.nutmeg.annotations.ThreadSafe;
 import com.nutmeg.types.TransactionType;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
+
+@ThreadSafe
 public class Stock {
 
     private final String account;

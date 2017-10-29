@@ -4,7 +4,6 @@ public enum TransactionType {
 
     BOT,
     SLD,
-    DEV,
     DEP,
     WDR,
     DIV

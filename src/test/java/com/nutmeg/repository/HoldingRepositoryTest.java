@@ -10,6 +10,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class HoldingRepositoryTest {
 
+    static {
+        HoldingRepository.reset();
+    }
+
     @ParameterizedTest
     @CsvSource({
             "'NEAA0000,20170101,DEP,100,1,CASH', 100",
@@ -25,8 +29,8 @@ class HoldingRepositoryTest {
         final Stock stock = StockBuilder.buildStock(stockString);
         final Holding holding = new Holding(stock.getAsset(), stock.getUnits());
 
-        HoldingRepository.write(holding, stock);
-        final Holding actual = HoldingRepository.read(stock);
+        HoldingRepository.write(holding, stock.getAccount(), stock.getAsset());
+        final Holding actual = HoldingRepository.read(stock.getAccount(), stock.getAsset());
 
         assertThat(actual.getHolding()).isEqualTo(Double.valueOf(value));
         assertThat(actual.getAsset()).isEqualTo(stock.getAsset());
